@@ -31,9 +31,9 @@ locals {
       gke_np_min_node_count  = 1
       gke_np_max_node_count  = 3
       # K8s
-      k8s_deployment_name    = "wordpress_deployment"
+      k8s_deployment_name    = "wordpress-deployment"
       k8s_container_image    = "wordpress"
-      k8s_container_name     = "wordpress_container"
+      k8s_container_name     = "wordpress-container"
       k8s_pod_name           = "wp"
       k8s_load_balancer_name = "wp-load-balancer"
       # Wordpress

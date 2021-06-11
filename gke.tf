@@ -13,6 +13,14 @@ resource "google_container_cluster" "gke_cluster" {
   ]
 }
 
+# Retrieve an access token as the Terraform runner
+data "google_client_config" "provider" {}
+
+data "google_container_cluster" "gke_cluster" {
+  name     = local.workspace["gke_cluster_name"]
+  location = local.workspace["region"]
+}
+
 resource "google_container_node_pool" "node_pool" {
   name        = local.workspace["gke_np_name"]
   project     = local.workspace["project_name"]
@@ -23,6 +31,10 @@ resource "google_container_node_pool" "node_pool" {
   node_config {
     preemptible = true
     machine_type = local.workspace["gke_np_machine_type"]
+
+    labels = {
+      "terraform_managed" = true
+    }
   }
 
   autoscaling {

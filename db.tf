@@ -34,6 +34,15 @@ resource "google_sql_database_instance" "sql_db_instance" {
   ]
 }
 
+resource "google_sql_database" "sql_db" {
+  name     = local.workspace["sql_db_name"]
+  instance = google_sql_database_instance.sql_db_instance.name
+
+  depends_on = [
+    google_sql_database_instance.sql_db_instance
+  ]
+}
+
 resource "google_sql_user" "db_user" {
   name = local.workspace["sql_db_user"]
   instance = google_sql_database_instance.sql_db_instance.name
