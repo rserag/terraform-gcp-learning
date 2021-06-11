@@ -1,56 +1,55 @@
-//vpc
-resource "google_compute_network" "vpc_network" {
-  name        = local.workspace["vpc_name"]
-  description = "vpc network for testing"
+resource "google_compute_network" "vpc_network_main" {
+  name        = local.workspace["vpc_main_name"]
+  description = "vpc main network for testing"
   project     = local.workspace["project_name"]
 }
 
-//resource "google_sql_database" "database" {
-//  name     = "my-database"
-//  instance = google_sql_database_instance.instance.name
-//}
+resource "google_compute_subnetwork" "subnet_main" {
+  name          = local.workspace["vpc_main_subnet_name"]
+  ip_cidr_range = local.workspace["vpc_main_subnet_cidr"]
+  project       = local.workspace["project_name"]
+  region        = local.workspace["region"]
+  network       = google_compute_network.vpc_network_main.id
+}
 
-//resource "google_sql_database_instance" "instance" {
-//  name   = "my-database-instance"
-//  region = "us-central1"
-//  settings {
-//    tier = "db-f1-micro"
-//  }
-//
-//  deletion_protection  = "false"
-//}
+resource "google_compute_firewall" "firewall_main" {
+  name    = local.workspace["firewall_main_name"]
+  network = google_compute_network.vpc_network_main.name
 
-//resource "google_compute_instance_template" "tpl" {
-//  name         = "template"
-//  machine_type = "e2-micro"
-//
-//  disk {
-//    source_image = "debian-cloud/debian-10"
-//    auto_delete  = true
-//    disk_size_gb = 20
-//    boot         = true
-//  }
-//
-//  network_interface {
-//    network = "default"
-//  }
-//
-//  metadata = {
-//    foo = "bar"
-//  }
-//
-//  can_ip_forward = true
-//}
-//
-//resource "google_compute_instance_from_template" "tpl" {
-//  name = "instance-from-template"
-//  zone = "us-central1-a"
-//
-//  source_instance_template = google_compute_instance_template.tpl.id
-//
-//  // Override fields from instance template
-//  can_ip_forward = false
-//  labels = {
-//    my_key = "my_value"
-//  }
-//}
+  allow {
+    protocol = "icmp"
+  }
+
+  allow {
+    protocol = "tcp"
+    ports = ["80", "8080"]
+  }
+
+  source_tags = ["wp", "wordpress"]
+}
+
+resource "google_compute_network" "vpc_network_db" {
+  name        = local.workspace["vpc_db_name"]
+  description = "vpc db network for testing"
+  project     = local.workspace["project_name"]
+}
+
+resource "google_compute_subnetwork" "subnet_db" {
+  name          = local.workspace["vpc_db_subnet_name"]
+  ip_cidr_range = local.workspace["vpc_db_subnet_cidr"]
+  project       = local.workspace["project_name"]
+  region        = local.workspace["region"]
+  network       = google_compute_network.vpc_network_db.id
+}
+
+resource "google_compute_firewall" "firewall_db" {
+  name    = local.workspace["firewall_db_name"]
+  network = google_compute_network.vpc_network_db.name
+
+  allow {
+    protocol = "tcp"
+    ports = ["80", "8080", "3306"]
+  }
+
+  source_tags = ["db", "database"]
+}
