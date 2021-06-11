@@ -24,6 +24,11 @@ locals {
       sql_db_user            = "wp_test_user"
       # GKE
       gke_cluster_name       = "${terraform.workspace}-wp-gke-cluster"
+      gke_np_name            = "${terraform.workspace}-wp-gke-node-pool"
+      gke_np_machine_type    = "e2-micro"
+      gke_np_node_count      = 1
+      gke_np_min_node_count  = 1
+      gke_np_max_node_count  = 3
     }
   }
   environment_vars = contains(keys(local.env), terraform.workspace) ? terraform.workspace : "default"
