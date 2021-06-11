@@ -19,6 +19,10 @@ data "google_client_config" "provider" {}
 data "google_container_cluster" "gke_cluster" {
   name     = local.workspace["gke_cluster_name"]
   location = local.workspace["region"]
+
+  depends_on = [
+    google_container_cluster.gke_cluster
+  ]
 }
 
 resource "google_container_node_pool" "node_pool" {

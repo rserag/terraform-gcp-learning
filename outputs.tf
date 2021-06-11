@@ -41,3 +41,11 @@ output "wp_url" {
     kubernetes_service.wp_load_balancer
   ]
 }
+
+output "bastion_ip" {
+  value = google_compute_address.bastion_static_ip.address
+
+  depends_on = [
+    google_compute_address.bastion_static_ip
+  ]
+}
