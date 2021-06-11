@@ -1,0 +1,9 @@
+.terraform/*
+.terraform.lock.hcl
+.idea
+.vscode
+.project
+.tmp
+.DS_Store
+*.log
+.history
