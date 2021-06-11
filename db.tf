@@ -11,7 +11,7 @@ resource "random_password" "user_password" {
 }
 
 resource "google_sql_database_instance" "sql_db_instance" {
-  name              = local.workspace["sql_db_name"]
+  name              = local.workspace["sql_db_instance_name"]
   database_version  = local.workspace["sql_db_version"]
   region            = local.workspace["region"]
   root_password     = random_password.root_password.result

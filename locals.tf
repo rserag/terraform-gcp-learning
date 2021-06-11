@@ -19,9 +19,10 @@ locals {
       peering_wp2db_name     = "${terraform.workspace}-wp-peering-wp2db"
       peering_db2wp_name     = "${terraform.workspace}-wp-peering-db2wp"
       # SQL
-      sql_db_name            = "${terraform.workspace}-wp-sql-db"
+      sql_db_instance_name   = "${terraform.workspace}-wp-sql-db"
       sql_db_version         = "MYSQL_5_6"
       sql_db_user            = "wp_test_user"
+      sql_db_name            = "${terraform.workspace}-wp"
       # GKE
       gke_cluster_name       = "${terraform.workspace}-wp-gke-cluster"
       gke_np_name            = "${terraform.workspace}-wp-gke-node-pool"
@@ -29,6 +30,14 @@ locals {
       gke_np_node_count      = 1
       gke_np_min_node_count  = 1
       gke_np_max_node_count  = 3
+      # K8s
+      k8s_deployment_name    = "wordpress_deployment"
+      k8s_container_image    = "wordpress"
+      k8s_container_name     = "wordpress_container"
+      k8s_pod_name           = "wp"
+      k8s_load_balancer_name = "wp-load-balancer"
+      # Wordpress
+      wp_table_prefix        = "wp_"
     }
   }
   environment_vars = contains(keys(local.env), terraform.workspace) ? terraform.workspace : "default"
